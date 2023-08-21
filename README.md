@@ -85,7 +85,7 @@ The module takes the following variables as input:
   - **servers**: List of ntp servers to sync from with each entry containing two properties, **url** and **options** (see: https://chrony.tuxfamily.org/doc/4.2/chrony.conf.html#server)
   - **pools**: A list of ntp server pools to sync from with each entry containing two properties, **url** and **options** (see: https://chrony.tuxfamily.org/doc/4.2/chrony.conf.html#pool)
   - **makestep**: An object containing remedial instructions if the clock of the vm is significantly out of sync at startup. It is an object containing two properties, **threshold** and **limit** (see: https://chrony.tuxfamily.org/doc/4.2/chrony.conf.html#makestep)
-- **tunnel**: Optional ssh tunneling parameter. It is an object with the following fields:
+- **ssh_tunnel**: Optional ssh tunneling parameter. It is an object with the following fields:
   - **enabled**: Boolean value indicating whether or not ssh tunneling is on. Defaults to false.
   - **ssh**: An object with the following fields:
     - **user**: Os user that remote users should use for ssh tunneling
