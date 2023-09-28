@@ -49,6 +49,9 @@ The module takes the following variables as input:
   - **load_balancer_tag**: Tag to assign to logs coming from envoy
   - **control_plane_tag**: Tag to assign to logs coming from the control plane
   - **node_exporter_tag** Tag to assign to logs coming from the prometheus node exporter
+  - **metrics**: Configuration for metrics fluentbit exposes.
+    - **enabled**: Whether to enable the metrics or not
+    - **port**: Port to expose the metrics on
   - **forward**: Configuration for the forward plugin that will talk to the external fluend/fluent-bit node. It has the following keys:
     - **domain**: Ip or domain name of the remote fluend node.
     - **port**: Port the remote fluend node listens on
