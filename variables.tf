@@ -37,23 +37,25 @@ variable "keypair_name" {
 }
 
 variable "ssh_host_key_rsa" {
-  type = object({
-    public = string
+  description = "Predefined rsa ssh host key"
+  type        = object({
+    public  = string
     private = string
   })
-  default = {
-    public = ""
+  default     = {
+    public  = ""
     private = ""
   }
 }
 
 variable "ssh_host_key_ecdsa" {
-  type = object({
-    public = string
+  description = "Predefined ecdsa ssh host key"
+  type        = object({
+    public  = string
     private = string
   })
-  default = {
-    public = ""
+  default     = {
+    public  = ""
     private = ""
   }
 }
@@ -63,31 +65,28 @@ variable "load_balancer" {
   type = object({
     cluster = string
     node_id = string
+    log_level = optional(string, "info")
   })
-  default     = {
-    cluster = ""
-    node_id = ""
-  }
 }
 
 variable "control_plane" {
   description = "Properties of the control plane"
   type = object({
-    log_level        = string
-    version_fallback = string
+    log_level        = optional(string, "info")
+    version_fallback = optional(string, "etcd")
     server           = object({
       port                = number
       max_connections     = number
-      keep_alive_time     = string
-      keep_alive_timeout  = string
-      keep_alive_min_time = string
+      keep_alive_time     = optional(string, "30s")
+      keep_alive_timeout  = optional(string, "5s")
+      keep_alive_min_time = optional(string, "30s")
     })
     etcd        = object({
       key_prefix         = string
       endpoints          = list(string)
-      connection_timeout = string
-      request_timeout    = string
-      retries            = number
+      connection_timeout = optional(string, "30s")
+      request_timeout    = optional(string, "30s")
+      retries            = optional(number, 10)
       ca_certificate     = string
       client             = object({
         certificate = string
@@ -124,9 +123,12 @@ variable "fluentbit" {
     load_balancer_tag = string
     control_plane_tag = string
     node_exporter_tag = string
-    metrics = object({
+    metrics = optional(object({
       enabled = bool
       port    = number
+    }), {
+      enabled = false
+      port = 0
     })
     forward = object({
       domain = string
@@ -160,7 +162,7 @@ variable "fluentbit_dynamic_config" {
   type = object({
     enabled = bool
     source  = string
-    etcd    = object({
+    etcd    = optional(object({
       key_prefix     = string
       endpoints      = list(string)
       ca_certificate = string
@@ -170,16 +172,37 @@ variable "fluentbit_dynamic_config" {
         username    = string
         password    = string
       })
+    }), {
+      key_prefix     = ""
+      endpoints      = []
+      ca_certificate = ""
+      client         = {
+        certificate = ""
+        key         = ""
+        username    = ""
+        password    = ""
+      }
     })
-    git     = object({
+    git     = optional(object({
       repo             = string
       ref              = string
       path             = string
       trusted_gpg_keys = list(string)
       auth             = object({
         client_ssh_key         = string
+        client_ssh_user        = optional(string, "")
         server_ssh_fingerprint = string
       })
+    }), {
+      repo             = ""
+      ref              = ""
+      path             = ""
+      trusted_gpg_keys = []
+      auth             = {
+        client_ssh_key         = ""
+        client_ssh_user        = ""
+        server_ssh_fingerprint = ""
+      }
     })
   })
   default = {
